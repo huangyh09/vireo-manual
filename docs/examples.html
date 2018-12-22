@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Examples</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">vireo</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="examples.html">Examples</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/huangyh09/vireo">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Examples</h1>
+<h4 class="author"><em>Yuanhua Huang</em></h4>
+<address class="author_afil">
+EMBL-EBI, Hinxton, UK<br><h4 class="author"><em>Davis McCarthy</em></h4>
+<address class="author_afil">
+EMBL-EBI, Hinxton, UK<br>
+</div>
+
+
+<p><strong>Last updated:</strong> 2018-12-22</p>
+<strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
+<ul>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Environment:</strong> empty </summary></p>
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20181222)</code> </summary></p>
+<p>The command <code>set.seed(20181222)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Session information:</strong> recorded </summary></p>
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> 694896e </summary></p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    docs/figure/
+
+Unstaged changes:
+    Modified:   analysis/_site.yml
+
+</code></pre>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
+</li>
+</ul>
+<details> <summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
+<ul>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+File
+</th>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+<th style="text-align:left;">
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+694896e
+</td>
+<td style="text-align:left;">
+huangyh09
+</td>
+<td style="text-align:left;">
+2018-12-22
+</td>
+<td style="text-align:left;">
+Start Vireo-Manual
+</td>
+</tr>
+</tbody>
+</table>
+</ul>
+<p></details></p>
+<hr />
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This document gives an introduction and usage manual of <code>Vireo</code> (Variational inference for reconstructing origins of cells in multiplexed scRNA-seq data), a Bayesian method to demultiplex pooled scRNA-seq data without genotype reference.</p>
+<p>Many single-cell genomics studies can be enhanced by multiplexing donors, where cells from multiple genetically distinct individuals (“donors”) are assayed together in a mixed population. Such experimental designs can be powerful for reducing cost of studies assaying cells from many donors and for enabling robustness to inevitable batch effects.</p>
+<p>When cells from multiple donors are mixed together, the donors that each cell origins are unknown at the time of sequencing. However, natural genetic variation (specifically, single nucleotide polymorphisms, SNP) act as natural barcodes capturing the donor identity of each cell. Appropriate computational methods, such as <code>Vireo</code> here, can infer the donor identity for each cell and thus “demultiplex” a population of cells from multiple donors in preparation of the dataset for further downstream analysis.</p>
+<p><code>Vireo</code> can use variant information extracted from single-cell RNA-seq data, which can be most platforms, including droplet, 10X genomics, smart-seq, to probabilistically assign single-cell transcriptomes to specific donor individuals, and to detect doublets that are from two different donors. Crucially, Vireo does not require any genotype reference for input donors to demultiplex, but keeps a flexibility to use the genotype information if it is available in any sub set or all donors.</p>
+<p>Briefly, Vireo is a Bayesian hierarchical model, where the donor identity of each cell and the genotype of each donor is unknown variables. In addition, binomial base model is applied to model the minor allele reads distribution, which also accounts for the sequencing errors. A mean field variational inference is employed here approximate the joint posterior distribution of cell identity, donor genotype, and the minor allele rates.</p>
+<p>The input data are two matrices, <code>A</code> and <code>D</code> for ALT and depth (i.e. ALT + REF), respectively, and the size in a typical experiment is 10,000 common SNPs across 10,000 cells. Computation on this size won’t be fast, however, this data set is highly sparse (~99% missing values). Our impeletation of Vireo takes the benefits of sparse matrix in R, hence largely saves memory space and computing time. <code>Vireo</code> is implemented as R functions in package <em><a href="http://bioconductor.org/packages/cardelino">cardelino</a></em>.</p>
+</div>
+<div id="demultiplexing-without-genotype-reference" class="section level1">
+<h1>Demultiplexing without genotype reference</h1>
+<p>In many biomedical studies, biological replications are important to eliminate unwanted variations, e.g., genetic variations, and often the genetic variation is not the main focus, and genotype reference is probably not available.</p>
+<p>For Vireo, known genotype reference is not necessary to enjoy the benefits of multiplexed scRNA-seq. The only requirement is a <strong>cell VCF file</strong> and the number of pooled donors (actually Vireo can detect the latter automatically).</p>
+<ul>
+<li>cell VCF file: a variant call format (VCF) file from which we can extract the variant x cell matrices of integer count of the number of reads supporting the alternative allele for each variant in each cell and the total number of reads overlapping each variant in each cell. This file can be piled up from bam file on a list of common SNPs by the multifaceted <a href="http://www.htslib.org/doc/bcftools.html"><code>bcftools</code></a> or our tailored designed <a href="https://github.com/huangyh09/cellSNP"><code>cellSNP</code></a>, Python package based on pysam.</li>
+</ul>
+<p>Here, we demonstrate the use of <code>Vireo</code> to assign 384 cells to 3 donors by 2,171 SNPs, which can be loaded from <em><a href="http://bioconductor.org/packages/cardelino">cardelino</a></em> package directly, via a function <code>load_cellSNP_vcf</code> based on <em><a href="http://bioconductor.org/packages/vcfR">vcfR</a></em>.</p>
+<pre class="r"><code>library(cardelino)
+cell_vcf_file &lt;- system.file(&quot;extdata&quot;, &quot;cells.donorid.vcf.gz&quot;,
+                             package = &quot;cardelino&quot;)
+cell_data &lt;- load_cellSNP_vcf(cell_vcf_file, 
+                              max_other_allele = NULL, 
+                              min_count = 0, min_MAF = 0)</code></pre>
+<pre><code>Scanning file to determine attributes.
+File attributes:
+  meta lines: 426
+  header_line: 427
+  variant count: 2171
+  column count: 393
+
+Meta line 426 read in.
+All meta lines processed.
+gt matrix initialized.
+Character matrix gt created.
+  Character matrix gt rows: 2171
+  Character matrix gt cols: 393
+  skip: 0
+  nrows: 2171
+  row_num: 0
+
+Processed variant 1000
+Processed variant 2000
+Processed variant: 2171
+All variants processed
+[1] &quot;2171 out of 2171 SNPs passed.&quot;</code></pre>
+<pre class="r"><code>summary(cell_data)</code></pre>
+<pre><code>  Length Class     Mode
+A 833664 dgCMatrix S4  
+D 833664 dgCMatrix S4  </code></pre>
+<p>In this particular example with reasonable small size and proper coverage, we can run probabilistic principal component analysis (PPCA) on the raw minor allele frequency and can get a feel for the grouping of cells by donor. Note, this takes much longer time for bigger size, e.g., 10,000 cells.</p>
+<pre class="r"><code>AF_tmp &lt;- cell_data$A / cell_data$D
+
+pp &lt;- pcaMethods::ppca(t(as.matrix(AF_tmp)))
+df &lt;- data.frame(PPCA1 &lt;- pp@scores[, 1], PPCA2 &lt;- pp@scores[, 2])
+ggplot(df, aes(PPCA1, PPCA2)) +
+  geom_point(alpha = 0.5) + theme_bw()</code></pre>
+<p><img src="figure/examples.Rmd/ppca-raw-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Here, there are 3 donors, hence we set n_donor=3. If this value is unknown, a list of numbers can be tried, e.g., 2 to 10, and usually the genuine n_donor will peak out by achieving highest lower bound. Addition, <code>check_doublet = TRUE</code> is used by default, however can be turned off if doublet detection is not needed. The <code>vireo</code> function returns a list of outputs, one of which is the <code>assigned</code> data.frame with inferred donor ID (either a donor ID, “doublet” or “unassigned”).</p>
+<pre class="r"><code>ids &lt;- vireo(cell_data = cell_data, n_donor = 3)</code></pre>
+<pre><code>RUN1: 4 random initializations...
+            [,1]      [,2]      [,3]      [,4]
+n_iter      21.0      21.0      21.0      21.0
+LBound -457444.3 -459124.8 -455500.9 -455165.8
+RUN1: Search in 5 donors. Estimated sizes:
+     donor1 donor5 donor4 donor3 donor2
+[1,]  142.3  129.4   89.4    7.4    4.5
+RUN2: Tuning the largest 3 donors with genotype prior estimated from RUN1.
+Finished in 6.43 sec.</code></pre>
+<pre class="r"><code>table(ids$assigned$donor_id)</code></pre>
+<pre><code>
+    donor1     donor2     donor3    doublet unassigned 
+       149        128         91          5         11 </code></pre>
+<p>When we map our donor ID back onto the PPCA plot we see that the clusters evident originally indeed correspond to the individual donors. Here, PPCA component 1 clearly separates the donors, while PPCA component 2 appears to reflect coverage of variants (unassigned cells with low coverage appear at low values in PPCA2).</p>
+<pre class="r"><code>df$donor_id &lt;- ids$assigned$donor_id
+ggplot(df, aes(PPCA1, PPCA2, colour = donor_id)) +
+  geom_point(alpha = 0.5) + theme_bw()</code></pre>
+<p><img src="figure/examples.Rmd/ppca-ids-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="demultiplexing-with-genotype-reference" class="section level1">
+<h1>Demultiplexing with genotype reference</h1>
+<p>In some other case, the genetic variation is indeed the focus of the study and the genotype reference is often available already, even for part of the samples. That is, donors have been genotyped using a SNP chip platform, exome sequencing or similar. In such cases, we recommend to use the available genotype reference, for which a <strong>donor VCF file</strong>.</p>
+<ul>
+<li>donor VCF file: a VCF file containing genotypes for each of the multiplexed donors.</li>
+</ul>
+<p>Now we load the donor VCF file <code>load_GT_vcf</code> from <em><a href="http://bioconductor.org/packages/cardelino">cardelino</a></em> based on <em><a href="http://bioconductor.org/packages/vcfR">vcfR</a></em> again. Note, the variants needed be matched between cell and donor data before sent to <code>vireo</code>, which can be achieved as follows.</p>
+<pre class="r"><code>donor_GT &lt;- load_GT_vcf(system.file(&quot;extdata&quot;, &quot;donors.donorid.vcf.gz&quot;, 
+                                    package = &quot;cardelino&quot;))</code></pre>
+<pre><code>Scanning file to determine attributes.
+File attributes:
+  meta lines: 68
+  header_line: 69
+  variant count: 5524
+  column count: 12
+
+Meta line 68 read in.
+All meta lines processed.
+gt matrix initialized.
+Character matrix gt created.
+  Character matrix gt rows: 5524
+  Character matrix gt cols: 12
+  skip: 0
+  nrows: 5524
+  row_num: 0
+
+Processed variant 1000
+Processed variant 2000
+Processed variant 3000
+Processed variant 4000
+Processed variant 5000
+Processed variant: 5524
+All variants processed</code></pre>
+<pre class="r"><code>row.names(donor_GT) &lt;- paste0(&quot;chr&quot;, row.names(donor_GT)) #not always necessary
+head(donor_GT)</code></pre>
+<pre><code>                 HPSI0614pf-ciwj HPSI0414pf-gesg HPSI0114pf-joxm
+chr1_881627_G_A                2               1               2
+chr1_1309405_T_C               0               1               0
+chr1_1425700_T_C               0               1               1
+chr1_1430985_C_T               0               1               0
+chr1_1684472_C_T               2               1               0
+chr1_1734970_C_T               0               0               1</code></pre>
+<pre class="r"><code>cell_data_mm &lt;- list()
+mm &lt;- match(row.names(cell_data$D), row.names(donor_GT))
+cell_data_mm$D &lt;- cell_data$D[!is.na(mm), ]
+cell_data_mm$A &lt;- cell_data$A[!is.na(mm), ]
+Geno_data &lt;- donor_GT[mm[!is.na(mm)], ]
+t(dim(cell_data_mm$D))</code></pre>
+<pre><code>     [,1] [,2]
+[1,] 2171  384</code></pre>
+<p>Now, we can run <code>vireo</code> again but with known genotype this time. Should the genotype is only for a subset of the input donors, please provide <code>n_donor</code> the true number of donors.</p>
+<pre class="r"><code>ids_GT &lt;- vireo(cell_data = cell_data_mm, donor_data = Geno_data)</code></pre>
+<pre><code>RUN1: 2 random initializations...
+            [,1]      [,2]
+n_iter      21.0      21.0
+LBound -520635.5 -520635.5
+Finished in 1.31 sec.</code></pre>
+<pre class="r"><code>table(ids_GT$assigned$donor_id)</code></pre>
+<pre><code>
+        doublet HPSI0114pf-joxm HPSI0414pf-gesg HPSI0614pf-ciwj 
+              5             129             149              91 
+     unassigned 
+             10 </code></pre>
+<pre class="r"><code>df$donor_id_GT &lt;- ids_GT$assigned$donor_id
+ggplot(df, aes(PPCA1, PPCA2, colour = donor_id_GT)) +
+  geom_point(alpha = 0.5) + theme_bw()</code></pre>
+<p><img src="figure/examples.Rmd/vireo%20with%20GT-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="glimpse-of-output-and-quick-comparison" class="section level1">
+<h1>Glimpse of output and quick comparison</h1>
+<p>The <code>assigned</code> data.frame contains the key information from the donor assignment, including the highest posterior probability value across the donors (<code>prob_max</code>), the posterior doublet probability (<code>prob_doublet</code>) and the number of variants with non-zero read coverage for the cell (<code>n_vars</code>). By default, if <code>n_vars</code> is less than 10, we expect that donor ID is unlikely to be accurate and return donor ID as “unassigned” for these cells. This threshold can be adjusted with the <code>n_vars_threshold</code> argument.</p>
+<pre class="r"><code>head(ids$assigned)</code></pre>
+<pre><code>         cell donor_id prob_max  prob_doublet n_vars
+1 22259_2#100   donor3        1  0.000000e+00    850
+2 22259_2#101   donor2        1  0.000000e+00    884
+3 22259_2#102   donor2        1  0.000000e+00    901
+4  22259_2#10   donor1        1  0.000000e+00    757
+5 22259_2#103   donor1        1 1.936995e-289    431
+6 22259_2#104   donor3        1 2.080685e-204    125</code></pre>
+<p>We can see that doublets tend to be inferred for “cells” with fewer variants with coverage (that is for cells with less donor information). In this case, reassuringly, the inferred doublets include known “minibulk” wells (10 cells from multiple donors processed as one “cell”) and positive control wells (details not shown).</p>
+<pre class="r"><code>fig_part1 &lt;- ggplot(ids$assigned, aes(n_vars, prob_doublet, colour = donor_id)) +
+  geom_point(alpha = 0.5) + scale_x_log10() + 
+  ggtitle(&quot;Without Genotype&quot;) + theme_bw()
+fig_part2 &lt;- ggplot(ids_GT$assigned, aes(n_vars, prob_doublet, colour = donor_id)) +
+  geom_point(alpha = 0.5) + scale_x_log10() + 
+  ggtitle(&quot;With Genotype&quot;) + theme_bw()
+
+ggpubr::ggarrange(fig_part1, fig_part2, nrow = 2, align = &quot;v&quot;)</code></pre>
+<p><img src="figure/examples.Rmd/plot-doublet-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>For most cells, the <code>vireo</code> model is very confident about donor assignment (posterior probability of 1 for best-matching donor). Once there are more than about 30 variants with read coverage we can assign cells to donors with very high confidence.</p>
+<pre class="r"><code>fig_part1 &lt;- ggplot(ids$assigned, aes(n_vars, prob_max, colour = donor_id)) +
+  geom_point(alpha = 0.5) + scale_x_log10() + 
+  ggtitle(&quot;Without Genotype&quot;) + theme_bw()
+fig_part2 &lt;- ggplot(ids_GT$assigned, aes(n_vars, prob_max, colour = donor_id)) +
+  geom_point(alpha = 0.5) + scale_x_log10() + 
+  ggtitle(&quot;With Genotype&quot;) + theme_bw()
+
+ggpubr::ggarrange(fig_part1, fig_part2, nrow = 2, align = &quot;v&quot;)</code></pre>
+<p><img src="figure/examples.Rmd/plot-postprob-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>With donor identity now inferred for these cells, the donor identities can be linked back to the expression profiles for the cells for downstream analysis.</p>
+<div id="session-information" class="section level2">
+<h2>Session information</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS  10.14.2
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] foreach_1.4.4   cardelino_0.2.5 BiocStyle_2.8.2 ggpubr_0.1.7   
+[5] magrittr_1.5    ggplot2_3.1.0   knitr_1.20     
+
+loaded via a namespace (and not attached):
+  [1] nlme_3.1-137                bitops_1.0-6               
+  [3] matrixStats_0.54.0          doMC_1.3.5                 
+  [5] ggtree_1.12.7               bit64_0.9-7                
+  [7] RColorBrewer_1.1-2          progress_1.2.0             
+  [9] httr_1.3.1                  rprojroot_1.3-2            
+ [11] GenomeInfoDb_1.16.0         tools_3.5.1                
+ [13] backports_1.1.2             R6_2.3.0                   
+ [15] vegan_2.5-2                 mgcv_1.8-24                
+ [17] DBI_1.0.0                   lazyeval_0.2.1             
+ [19] BiocGenerics_0.26.0         colorspace_1.3-2           
+ [21] permute_0.9-4               withr_2.1.2                
+ [23] tidyselect_0.2.4            prettyunits_1.0.2          
+ [25] bit_1.1-14                  compiler_3.5.1             
+ [27] git2r_0.23.0                Biobase_2.40.0             
+ [29] DelayedArray_0.6.5          labeling_0.3               
+ [31] rtracklayer_1.40.4          scales_1.0.0               
+ [33] stringr_1.3.1               digest_0.6.18              
+ [35] Rsamtools_1.32.2            rmarkdown_1.10             
+ [37] R.utils_2.7.0               XVector_0.20.0             
+ [39] pkgconfig_2.0.2             htmltools_0.3.6            
+ [41] BSgenome_1.48.0             rlang_0.3.0.1              
+ [43] RSQLite_2.1.1               bindr_0.1.1                
+ [45] jsonlite_1.5                BiocParallel_1.14.2        
+ [47] dplyr_0.7.6                 R.oo_1.22.0                
+ [49] VariantAnnotation_1.26.1    RCurl_1.95-4.11            
+ [51] GenomeInfoDbData_1.1.0      Matrix_1.2-14              
+ [53] Rcpp_1.0.0                  munsell_0.5.0              
+ [55] S4Vectors_0.18.3            ape_5.1                    
+ [57] R.methodsS3_1.7.1           stringi_1.2.4              
+ [59] whisker_0.3-2               yaml_2.2.0                 
+ [61] MASS_7.3-50                 SummarizedExperiment_1.10.1
+ [63] zlibbioc_1.26.0             plyr_1.8.4                 
+ [65] pinfsc50_1.1.0              grid_3.5.1                 
+ [67] blob_1.1.1                  parallel_3.5.1             
+ [69] snpStats_1.30.0             crayon_1.3.4               
+ [71] lattice_0.20-35             cowplot_0.9.3              
+ [73] Biostrings_2.48.0           splines_3.5.1              
+ [75] GenomicFeatures_1.32.2      hms_0.4.2                  
+ [77] pillar_1.3.0                GenomicRanges_1.32.6       
+ [79] codetools_0.2-15            biomaRt_2.36.1             
+ [81] stats4_3.5.1                vcfR_1.8.0                 
+ [83] XML_3.98-1.15               glue_1.3.0                 
+ [85] evaluate_0.11               pcaMethods_1.73.0          
+ [87] memuse_4.0-0                treeio_1.4.3               
+ [89] gtable_0.2.0                purrr_0.2.5                
+ [91] tidyr_0.8.1                 assertthat_0.2.0           
+ [93] tidytree_0.1.9              viridisLite_0.3.0          
+ [95] survival_2.42-6             tibble_1.4.2               
+ [97] pheatmap_1.0.10             iterators_1.0.10           
+ [99] rvcheck_0.1.0               GenomicAlignments_1.16.0   
+[101] AnnotationDbi_1.42.1        memoise_1.1.0              
+[103] IRanges_2.14.10             cluster_2.0.7-1            
+[105] workflowr_1.1.1             bindrcpp_0.2.2             </code></pre>
+</div>
+</div>
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+<hr>
+<p>
+  This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
+  analysis was created with
+  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
+</p>
+<hr>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
