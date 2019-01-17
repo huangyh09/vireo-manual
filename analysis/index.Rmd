@@ -6,4 +6,41 @@ output:
     toc: false
 ---
 
-Welcome to my research website.
+Welcome to the documentation of `Vireo` for demultiplexing of pooled scRNA-seq 
+data without or with (part) reference. `Vireo` is part of 
+[cardelino](https://github.com/PMBio/cardelino) R package. 
+
+Vireo provides two major fuctions:
+
+1. `vireo`: demultiplexing of pooled scRNA-seq data. See 
+   [Examples](examples.html) for quick
+   usage
+2. `donor_read_simulator`: simualting reads to evaluate experiment designs on 
+   its performance in cell assignment, doublets detection and genotype estimate 
+   of each donor. See 
+   [Simulator](simulation.html) for 
+   performing simulation for experiment design.
+   
+   
+## Quick introduction
+We also provide a few lines about multiplexed scRNA-seq experiment and the ideas 
+behind `Vireo`, see the [About](about.html)
+page.
+
+
+## Genotyping cells
+Piling up a list of common variants is the first step for demultiplixing with 
+`Vireo`, which requires a variant call format (VCF) file (SNP-by-cells). This 
+VCF can be obtained by piling up the bam file on a list of common SNPs by the 
+multifaceted [`bcftools`](http://www.htslib.org/doc/bcftools.html) or our 
+tailored designed [`cellSNP`](https://github.com/huangyh09/cellSNP), a Python 
+package based on pysam.
+
+We highly recommend our `cellSNP`, which even support de-novo piling up a whole 
+genome if a common variants is not available for the species in the study. For 
+human, a list of common variant give sufficiently good performance.
+
+
+## Reference
+comign soon.
+

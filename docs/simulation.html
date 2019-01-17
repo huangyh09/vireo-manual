@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Using simulation to evaluate experiment designs</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">vireo</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="examples.html">Examples</a>
+</li>
+<li>
+  <a href="simulation.html">Simulation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/huangyh09/vireo-manual">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Using simulation to evaluate experiment designs</h1>
+
+</div>
+
+
+<p><strong>Last updated:</strong> 2019-01-17</p>
+<strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
+<ul>
+<li>
+<details>
+<p><summary> <strong style="color:red;">&#10006;</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</details>
+</li>
+<li>
+<details>
+<p><summary> <strong style="color:blue;">&#10004;</strong> <strong>Environment:</strong> empty </summary></p>
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</details>
+</li>
+<li>
+<details>
+<p><summary> <strong style="color:blue;">&#10004;</strong> <strong>Seed:</strong> <code>set.seed(20181222)</code> </summary></p>
+<p>The command <code>set.seed(20181222)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</details>
+</li>
+<li>
+<details>
+<p><summary> <strong style="color:blue;">&#10004;</strong> <strong>Session information:</strong> recorded </summary></p>
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</details>
+</li>
+<li>
+<details>
+<p><summary> <strong style="color:blue;">&#10004;</strong> <strong>Repository version:</strong> <a href="https://github.com/huangyh09/vireo-manual/tree/9c547b0d432b798ecb9bcf2c72a6b1c3c59d352a" target="_blank">9c547b0</a> </summary></p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    data/.DS_Store
+    Ignored:    docs/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/simulation.Rmd
+    Untracked:  data/GT_val.genome1K.donors20.rds
+    Untracked:  data/demux.ctrl.AnD.gm1K.rds
+    Untracked:  data/simu.geneASE.example.rds
+
+Unstaged changes:
+    Modified:   README.md
+    Modified:   analysis/_site.yml
+    Modified:   analysis/about.Rmd
+    Modified:   analysis/examples.Rmd
+    Modified:   analysis/index.Rmd
+
+</code></pre>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</details>
+</li>
+</ul>
+<hr />
+<p>In this totorial, we will show how to use <code>donor_read_simulator</code> and other functions in cardelino package to evaluate the designs of multiplexed scRNA-seq experiments, including number of total reads, number of pooled donors, and loading cells.</p>
+<p>The experiment design is important since the demultiplexing is more difficult when genotype is not available. Normally, given the genotype, especially the ones with high large volumn and high accuracy from genotype array or genome / exome sequencing, it is relatively easy to demultiplex pooled samples in a wide range of experiment designs.</p>
+<div id="load-packages-and-data" class="section level1">
+<h1>Load packages and data</h1>
+<p>First, let us load packages and have a look of the simulation seed data.</p>
+<p>All data needed is located in this package. In the <code>data</code> folder, there are two files to use:</p>
+<ul>
+<li><p><code>demux.ctrl.AnD.gm1K.rds</code>: containing two matrices: <code>A</code> and <code>D</code>, for the read counts of alternative alleles and sequencing coverage or depth in one control sample from demulet paper: 18005 SNPs aross 14619 cells.</p></li>
+<li><p><code>GT_val.genome1K.donors20.rds</code>: containing the genotype data <code>GT</code> for 20 donors from thousands genome project. For more 100-donor data set, you can download <a href="https://sourceforge.net/projects/cellsnp/files/rdata/GT_val.genome1K.donors100.rds">here</a>.</p></li>
+</ul>
+<pre class="r"><code># setwd(&quot;/Users/huangh/MyGit/vireo-manual&quot;)
+cell_dat &lt;- readRDS(&quot;data/demux.ctrl.AnD.gm1K.rds&quot;)
+GT_dat &lt;- readRDS(&quot;data/GT_val.genome1K.donors20.rds&quot;)
+
+print(paste(&quot;cell data:&quot;, nrow(cell_dat$D), &quot;SNPs&quot;, ncol(cell_dat$D), &quot;cells.&quot;))</code></pre>
+<pre><code>[1] &quot;cell data: 18005 SNPs 14619 cells.&quot;</code></pre>
+<pre class="r"><code>print(paste(&quot;missing rate:&quot;, round(mean(cell_dat$D == 0), 5)))</code></pre>
+<pre><code>[1] &quot;missing rate: NA&quot;</code></pre>
+<pre class="r"><code>print(paste(&quot;donor GT data dimentions:&quot;, t(dim(GT_dat$GT))))</code></pre>
+<pre><code>[1] &quot;donor GT data dimentions: 254086&quot; &quot;donor GT data dimentions: 20&quot;    </code></pre>
+<pre class="r"><code>print(head(GT_dat$GT))</code></pre>
+<pre><code>             HG00256 HG00139 HG00173 HG00261 HG00110 HG00136 HG00143
+1_13550_G_A        0       0       1       0       0       0       0
+1_69428_T_G        0       0       1       0       0       0       0
+1_69761_A_T        0       0       0       0       0       0       0
+1_69897_T_C        2       1       1       2       1       2       2
+1_138484_A_G       0       0       0       0       0       0       0
+1_138593_G_T       0       0       0       0       0       0       0
+             HG00106 HG00255 HG00178 HG00101 HG00185 HG00262 HG00189
+1_13550_G_A        0       0       0       0       0       0       0
+1_69428_T_G        0       0       0       0       0       1       0
+1_69761_A_T        0       0       0       2       0       0       0
+1_69897_T_C        2       2       2       2       2       1       1
+1_138484_A_G       0       0       0       0       0       0       1
+1_138593_G_T       0       0       1       0       0       1       0
+             HG00234 HG00125 HG00117 HG00102 HG00133 HG00118
+1_13550_G_A        0       0       0       0       0       0
+1_69428_T_G        0       1       0       0       0       0
+1_69761_A_T        0       0       2       0       0       0
+1_69897_T_C        2       2       2       1       2       1
+1_138484_A_G       0       0       0       0       0       0
+1_138593_G_T       0       0       0       0       0       0</code></pre>
+</div>
+<div id="set-the-experiment-design-parameters" class="section level1">
+<h1>Set the experiment design parameters</h1>
+<p>Set the experiment parameters here. Let us try a typical pooled experiment data with 5000 cells from 4 donors. Customise it to your design.</p>
+<pre class="r"><code>n_cells &lt;- 5000
+n_donors &lt;- 4
+doublet_rate &lt;- n_cells / 100000
+donor_fractions &lt;- rep(1 / n_donors, n_donors)
+gene_ASE &lt;- TRUE ## gene specific allelic expression</code></pre>
+<p>Before generating the reads, we need to down sample the donor genotype data to the given number of donors and the given number of variable SNPs (18,005 here). Given the depth seed matrix, and the known genotype of the donors, the simulator generates the reads by the following three steps:</p>
+<ol style="list-style-type: decimal">
+<li>Uniformly sample the depths profiles <code>D</code> from cells in the seed matrix <code>D_input</code>. Note, it only samples the column, i.e., cells. If needed, it can shuffle the row, i.e., SNPs beforehand.</li>
+<li>Generate the binomial parameters for the three genotypes: 0 (hom_ref), 1 (het) and 2 (hom_alt). By default, it follows a beta distribution: <span class="math display">\[p_0 \sim \beta(0.3, 29.7), p_1 \sim \beta(3.0, 3.0), p_2 \sim \beta(29.7, 0.3)\]</span> If the parameter <code>gene_ASE</code> is TRUE, we generate the parameters [p_0, p_1, p_2] for each SNP individually. Also, this beta distribution can be custermised, though it is already optimised in common case.</li>
+<li>Once obtained the depth of each SNP in each cell, and its binomial parameter, we can directly sample the read counts for the alternative alleles, i.e. matrix <code>A</code></li>
+</ol>
+<pre class="r"><code># random seed to keep it reproducible
+set.seed(0)
+
+# Depths seed for simulation
+D_input &lt;- cell_dat$D
+
+# sample donors and remove variants that are the same in sampled donors
+GT_use &lt;- GT_dat$GT[, sample(ncol(GT_dat$GT), n_donors)]
+GT_use &lt;- GT_use[rowMeans(GT_use) != rowMax(GT_use), ] 
+
+# sub sample variants to the same number as D_input
+idx_use &lt;- sample(nrow(GT_use), nrow(D_input))
+GT_use &lt;- GT_use[idx_use, ]
+row.names(GT_use) &lt;- paste0(&quot;SNP&quot;, seq_len(nrow(GT_use)))
+
+# generate simulated reads
+dat_sim &lt;- donor_read_simulator(GT_use, D_input, n_cell = n_cells,
+                                gene_ASE = gene_ASE, 
+                                donor_size = donor_fractions,
+                                doublet_rate = doublet_rate)
+
+# save the simulated data if you want
+# saveRDS(dat_sim, &quot;data/simu.geneASE.example.rds&quot;)</code></pre>
+<p>From the simulator, the output list variable contains randomly generated reads matrices <code>A</code> and <code>D</code>, as well as the ground truth of genotype <code>GT</code> and cell identity <code>I_sim</code>, and the binomial parameter <code>p_sim</code>.</p>
+</div>
+<div id="demultiplex-with-viroe" class="section level1">
+<h1>Demultiplex with Viroe</h1>
+<p>Given the simulated data following the experiment design, we can demultiplex the data with Vireo without genotype reference.</p>
+<pre class="r"><code>ids &lt;- vireo(cell_data = dat_sim, n_donor = n_donors)</code></pre>
+<pre><code>RUN1: 4 random initializations...
+            [,1]      [,2]      [,3]      [,4]
+n_iter      36.0      31.0      39.0      32.0
+LBound -294289.1 -295659.3 -291249.9 -294230.2
+RUN1: Search in 6 donors. Estimated sizes:
+     donor5 donor2 donor1 donor6 donor3 donor4
+[1,] 1250.6 1199.6 1173.3 1093.3   32.8      1
+RUN2: Tuning the largest 4 donors with genotype prior estimated from RUN1.
+Finished in 49.93 sec.</code></pre>
+<pre class="r"><code>table(ids$assigned$donor_id)</code></pre>
+<pre><code>
+    donor1     donor2     donor3     donor4    doublet unassigned 
+      1246       1195       1170       1200        155         34 </code></pre>
+<pre class="r"><code>fig_part1 &lt;- ggplot(ids$assigned, aes(n_vars, prob_doublet, 
+                                      colour = donor_id)) +
+  geom_point(alpha = 0.5) + scale_x_log10() + theme_bw()
+fig_part2 &lt;- ggplot(ids$assigned, aes(n_vars, prob_max, colour = donor_id)) +
+  geom_point(alpha = 0.5) + scale_x_log10() +  theme_bw()
+
+ggpubr::ggarrange(fig_part1, fig_part2, nrow = 2, align = &quot;v&quot;)</code></pre>
+<p><img src="figure/simulation.Rmd/plot-doublet-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="evaluate-the-performance-of-demultiplexing" class="section level1">
+<h1>Evaluate the performance of demultiplexing</h1>
+<div id="singlet-assignment-and-doublet-detection" class="section level2">
+<h2>Singlet assignment and doublet detection</h2>
+<p>First, let us evaluate the performance of Vireo in singlet assignment and doublet detection. By default, we use the prob_max &gt;= 0.9 (i.e., the highest probability assigning to a donor) for confident assignment, and use prob_doublet &gt;= 0.9 (i.e., the summarized probability of a doublet) for confident doublet detection.</p>
+<p>The singlet assignment and doublet detection can be visualised as follow.</p>
+<pre class="r"><code>ids$assigned$color_id &lt;- ids$assigned$donor_id
+ids$assigned$color_id[ids$assigned$color_id != &quot;doublet&quot; &amp; 
+                         ids$assigned$color_id != &quot;unassigned&quot;] &lt;- &quot;singlet&quot;
+ids$assigned$color_id[ids$assigned$color_id == &quot;unassigned&quot;] &lt;- &quot;unsure&quot;
+
+ids$assigned$Truth &lt;- rep(&quot;singlet&quot;, ncol(ids$D)) 
+ids$assigned$Truth[rowSums(dat_sim$I_sim &gt; 0) &gt; 1] &lt;- &quot;doublet&quot;
+
+ggplot(ids$assigned, aes(n_vars, prob_max, 
+                         colour = color_id, shape=Truth)) +
+  geom_point(alpha = 0.7) + xlim(0, 400) + 
+  scale_color_manual(values = c(&quot;#55C667FF&quot;, &quot;#39568CFF&quot;, &quot;gray40&quot;),
+                     name = &quot;Assigned&quot;) +
+  scale_shape_manual(values = c(2, 1), name = &quot;True label&quot;) +
+  scale_y_continuous(breaks = seq(0, 1, 0.2))</code></pre>
+<p><img src="figure/simulation.Rmd/scatter%20default-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Addtionally, we can explore the overall performance by precision-recall curve with varying the threshold. The Area Under the Precision-Recall Curve (AUPRC) can be used as a summarised score for the overall performance.</p>
+<pre class="r"><code>ass_db &lt;- assign_scores(ids$prob, dat_sim$I_sim)</code></pre>
+<pre><code>     [,1] [,2] [,3] [,4]
+[1,]    2    3    4    1
+[1] &quot;181 samples have multiple labels.&quot;</code></pre>
+<pre class="r"><code>print(paste(&quot;Doublet, cutoff = 0.9: Recall =&quot;, 
+            round(ass_db$df_db$Recall[ass_db$df_db$cutoff == 0.1][1], 3),
+            &quot;Precision = &quot;, 
+            round(ass_db$df_db$Precision[ass_db$df_db$cutoff == 0.1][1], 3)))</code></pre>
+<pre><code>[1] &quot;Doublet, cutoff = 0.9: Recall = 0.856 Precision =  1&quot;</code></pre>
+<pre class="r"><code>print(paste(&quot;Doublet, cutoff = 0.1: Recall =&quot;, 
+            round(ass_db$df_db$Recall[ass_db$df_db$cutoff == 0.9][1], 3),
+            &quot;Precision = &quot;, 
+            round(ass_db$df_db$Precision[ass_db$df_db$cutoff == 0.9][1], 3)))</code></pre>
+<pre><code>[1] &quot;Doublet, cutoff = 0.1: Recall = 0.867 Precision =  0.835&quot;</code></pre>
+<pre class="r"><code>ass_db$df_sg &lt;- rbind(ass_db$df_sg, c(0, 1, 0))
+db_name = paste0(&quot;Doublet:&quot;, round(ass_db$AUC_db, 4))
+sg_name = paste0(&quot;Singlet:&quot;, round(ass_db$AUC_sg, 4))
+df &lt;- as.data.frame(
+        rbind(data.frame(ass_db$df_db, 
+                         AUPRC = rep(db_name, nrow(ass_db$df_db))),
+              data.frame(ass_db$df_sg, 
+                         AUPRC = rep(sg_name, nrow(ass_db$df_sg)))))
+
+ggplot(df, aes(x = Recall, y = Precision)) + 
+  geom_line(aes(color = AUPRC)) + 
+  geom_point(aes(color = AUPRC), size=2) + 
+  scale_color_manual(values = c(&quot;#55C667FF&quot;, &quot;#39568CFF&quot;)) + 
+  xlab(&quot;Detection rate (recall)&quot;) + 
+  scale_x_continuous(breaks = seq(0,1,0.2)) +
+  scale_y_continuous(breaks = seq(0,1,0.2)) + 
+  ylab(&quot;Precision&quot;)</code></pre>
+<p><img src="figure/simulation.Rmd/PR%20curve-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="genotype-estimate" class="section level2">
+<h2>Genotype estimate</h2>
+<p>Then, we can evaluate the accuracy of genotype estimate, by comparing the input genotype and estimated <code>GT_prob</code> or <code>GT</code>. There are three genotypes, and they have different frequencys, so we will evalate them separately.</p>
+<pre class="r"><code># freqency of input genotype and estimated genotype
+table(dat_sim$GT)</code></pre>
+<pre><code>
+    0     1     2 
+37423 24815  9782 </code></pre>
+<pre class="r"><code>table(ids$GT)</code></pre>
+<pre><code>
+    0     1     2 
+43521 14120 14379 </code></pre>
+<pre class="r"><code># rearange the vireo estimated donors to match the input donors
+col_idx &lt;- colMatch(dat_sim$I_sim, ids$prob)
+t(col_idx)</code></pre>
+<pre><code>     [,1] [,2] [,3] [,4]
+[1,]    2    3    4    1</code></pre>
+<pre class="r"><code># Estimated genotype by using highest probability
+GT_probMax &lt;- matrix(rowMax(ids$GT_prob), nrow = nrow(ids$D))
+GT_val &lt;- matrix(rowArgmax(ids$GT_prob) - 1, nrow = nrow(ids$D))
+
+# rank SNPs by total reads, and categorised by genotype
+df.GT &lt;- data.frame(SNP = rep(row.names(dat_sim$GT), ncol(dat_sim$GT)),
+                   donor = rep(ncol(dat_sim$GT), each = nrow(dat_sim$GT)),
+                   GT = c(dat_sim$GT), 
+                   GT_est = c(GT_val[, col_idx]), 
+                   correct = c(GT_val[, col_idx] == dat_sim$GT),
+                   GT_prob = c(GT_probMax[, col_idx]),
+                   expr_times = matrix(((ids$D &gt; 0) %*% ids$prob)[, col_idx]),
+                   total_read = matrix((ids$D %*% ids$prob)[, col_idx]))
+
+head(df.GT, 10)</code></pre>
+<pre><code>     SNP donor GT GT_est correct   GT_prob expr_times total_read
+1   SNP1     4  1      1    TRUE 0.9863636   3.000000   3.000000
+2   SNP2     4  0      0    TRUE 0.7991668   1.000000   1.000000
+3   SNP3     4  1      0   FALSE 0.9992280  12.000000  12.000000
+4   SNP4     4  0      0    TRUE 0.9992516   5.999995   5.999995
+5   SNP5     4  0      0    TRUE 0.9999994  15.999974  15.999974
+6   SNP6     4  1      1    TRUE 0.9999996  16.999953  16.999953
+7   SNP7     4  1      1    TRUE 0.9999939  11.000000  11.000000
+8   SNP8     4  0      0    TRUE 0.9418238   2.000000   2.000000
+9   SNP9     4  2      2    TRUE 1.0000000  33.163673  44.163673
+10 SNP10     4  0      0    TRUE 0.9984809   3.999954   4.999954</code></pre>
+<pre class="r"><code>library(viridis)
+df.GT &lt;- df.GT[order(df.GT$total_read, decreasing = TRUE), ]
+Top_SNP &lt;- c(10, 30, 100, 300, 1000, 3000, 10000, 24000, 37000)
+
+df.out &lt;- data.frame(Genotype = rep(c(&quot;hom_ref&quot;, &quot;het&quot;, &quot;hom_alt&quot;), 
+                                    each = length(Top_SNP)),
+                     Top_list = rep(Top_SNP, 3),
+                     GT_acc = rep(NA, length(Top_SNP) * 3), 
+                     UMI_count = rep(NA, length(Top_SNP) * 3))
+
+# Calculate cummunitive accuracy
+for (gt in c(0, 1, 2)) {
+  df.tmp &lt;- df.GT[df.GT$GT == gt, ]
+  for (ii in seq_len(length(Top_SNP))) {
+    if (nrow(df.tmp) &lt; Top_SNP[ii]) {
+      df.out$GT_acc[gt * length(Top_SNP) + ii] &lt;- NA
+      df.out$UMI_count[gt * length(Top_SNP) + ii] &lt;- NA
+    } else {
+      df.out$GT_acc[gt * length(Top_SNP) + ii] &lt;-
+        mean(df.tmp$correct[1:Top_SNP[ii]])
+      df.out$UMI_count[gt * length(Top_SNP) + ii] &lt;- 
+        median(df.tmp$total_read[1:Top_SNP[ii]])
+    }
+  }
+}
+head(df.out)</code></pre>
+<pre><code>  Genotype Top_list    GT_acc  UMI_count
+1  hom_ref       10 1.0000000 5042.53943
+2  hom_ref       30 1.0000000 2704.77746
+3  hom_ref      100 1.0000000 1374.34376
+4  hom_ref      300 0.9933333  415.44839
+5  hom_ref     1000 0.9970000   95.95370
+6  hom_ref     3000 0.9943333   28.99848</code></pre>
+<pre class="r"><code># plot figure
+ggplot(df.out, aes(x=Top_list, y=GT_acc)) + 
+  geom_line(aes(color = UMI_count, shape = Genotype)) + 
+  geom_point(aes(color = UMI_count, shape = Genotype), size=3) + 
+  scale_color_viridis(option = &quot;D&quot;, name = &quot;UMI count&quot;, trans = &quot;log10&quot;) +
+  scale_x_continuous(tran=&quot;log10&quot;) + ylim(0, 1) +
+  ylab(&quot;Genotype precision&quot;) + xlab(&quot;Top expressed variants&quot;)</code></pre>
+<p><img src="figure/simulation.Rmd/plot%20GT%20estimate-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="session-information" class="section level2">
+<h2>Session information</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.2 (2018-12-20)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Mojave 10.14.2
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] viridis_0.5.1     viridisLite_0.3.0 cardelino_0.2.6   ggpubr_0.1.7     
+[5] magrittr_1.5      ggplot2_3.1.0     knitr_1.20       
+
+loaded via a namespace (and not attached):
+ [1] nlme_3.1-137                bitops_1.0-6               
+ [3] matrixStats_0.54.0          ggtree_1.12.7              
+ [5] bit64_0.9-7                 RColorBrewer_1.1-2         
+ [7] progress_1.2.0              httr_1.3.1                 
+ [9] rprojroot_1.3-2             GenomeInfoDb_1.16.0        
+[11] tools_3.5.2                 backports_1.1.2            
+[13] R6_2.3.0                    DBI_1.0.0                  
+[15] lazyeval_0.2.1              BiocGenerics_0.26.0        
+[17] colorspace_1.3-2            withr_2.1.2                
+[19] gridExtra_2.3               tidyselect_0.2.5           
+[21] prettyunits_1.0.2           bit_1.1-14                 
+[23] compiler_3.5.2              git2r_0.23.0               
+[25] Biobase_2.40.0              DelayedArray_0.6.5         
+[27] rtracklayer_1.40.4          labeling_0.3               
+[29] scales_1.0.0                stringr_1.3.1              
+[31] digest_0.6.18               Rsamtools_1.32.2           
+[33] rmarkdown_1.10              R.utils_2.7.0              
+[35] XVector_0.20.0              pkgconfig_2.0.2            
+[37] htmltools_0.3.6             BSgenome_1.48.0            
+[39] rlang_0.3.1                 RSQLite_2.1.1              
+[41] bindr_0.1.1                 jsonlite_1.6               
+[43] BiocParallel_1.14.2         dplyr_0.7.8                
+[45] R.oo_1.22.0                 VariantAnnotation_1.26.1   
+[47] RCurl_1.95-4.11             GenomeInfoDbData_1.1.0     
+[49] Matrix_1.2-15               Rcpp_1.0.0                 
+[51] munsell_0.5.0               S4Vectors_0.18.3           
+[53] ape_5.1                     R.methodsS3_1.7.1          
+[55] stringi_1.2.4               whisker_0.3-2              
+[57] yaml_2.2.0                  SummarizedExperiment_1.10.1
+[59] zlibbioc_1.26.0             plyr_1.8.4                 
+[61] grid_3.5.2                  blob_1.1.1                 
+[63] parallel_3.5.2              snpStats_1.30.0            
+[65] crayon_1.3.4                lattice_0.20-38            
+[67] Biostrings_2.48.0           cowplot_0.9.4              
+[69] splines_3.5.2               GenomicFeatures_1.32.2     
+[71] hms_0.4.2                   pillar_1.3.1               
+[73] GenomicRanges_1.32.7        biomaRt_2.36.1             
+[75] stats4_3.5.2                XML_3.98-1.15              
+[77] glue_1.3.0                  evaluate_0.11              
+[79] treeio_1.4.3                gtable_0.2.0               
+[81] purrr_0.2.5                 tidyr_0.8.2                
+[83] assertthat_0.2.0            tidytree_0.1.9             
+[85] survival_2.43-3             tibble_2.0.1               
+[87] pheatmap_1.0.12             rvcheck_0.1.0              
+[89] GenomicAlignments_1.16.0    AnnotationDbi_1.42.1       
+[91] memoise_1.1.0               IRanges_2.14.12            
+[93] workflowr_1.1.1             bindrcpp_0.2.2             </code></pre>
+</div>
+</div>
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+<hr>
+<p>
+  This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
+  analysis was created with
+  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
+</p>
+<hr>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,23 +1,16 @@
 ---
-title: "Examples"
-author:
-- name: "Yuanhua Huang"
-  affiliation:
-  - EMBL-EBI, Hinxton, UK
-- name: "Davis McCarthy"
-  affiliation: 
-  - EMBL-EBI, Hinxton, UK
-  - St Vincent's Institute of Medical Research, Melbourne, Australia
-package: cardelino
+title: "Using Vireo to demultiplex pooled scRNA-seq"
+site: workflowr::wflow_site
 output:
-    BiocStyle::html_document
-vignette: >
-  %\VignetteIndexEntry{Clone ID with cardelino}
-  %\VignetteEngine{knitr::rmarkdown}
-  %VignetteEncoding{UTF-8}
+  workflowr::wflow_html:
+    toc: false
 ---
 
+In this totorial, we will use the buid-in data set in `cardelino` package to 
+show how to use Viroe to demultiplex pooled scRNA-seq data without or 
+with (part) genotype reference data.
 
+First, let us load some basic functions and set the environment.
 ```{r knitr-options, echo=FALSE, message=FALSE, warning=FALSE}
 ## To render an HTML version that works nicely with github and web pages, do:
 ## rmarkdown::render("vignettes/vignette.Rmd", "all")
@@ -29,47 +22,6 @@ library(ggpubr)
 library(BiocStyle)
 theme_set(theme_bw(12))
 ```
-
-# Introduction
-
-This document gives an introduction and usage manual of `Vireo` (Variational 
-inference for reconstructing origins of cells in multiplexed scRNA-seq data), a
-Bayesian method to demultiplex pooled scRNA-seq data without genotype reference.
-
-Many single-cell genomics studies can be enhanced by multiplexing donors, where 
-cells from multiple genetically distinct individuals ("donors") are assayed 
-together in a mixed population. Such experimental designs can be powerful for 
-reducing cost of studies assaying cells from many donors and for enabling 
-robustness to inevitable batch effects. 
-
-When cells from multiple donors are mixed together, the donors that each cell 
-origins are unknown at the time of sequencing. However, natural genetic 
-variation (specifically, single nucleotide polymorphisms, SNP) act as natural 
-barcodes capturing the donor identity of each cell. Appropriate computational 
-methods, such as `Vireo` here, can infer the donor identity for each cell and 
-thus "demultiplex" a population of cells from multiple donors in preparation of 
-the dataset for further downstream analysis. 
-
-`Vireo` can use variant information extracted from single-cell RNA-seq data, 
-which can be most platforms, including droplet, 10X genomics, smart-seq, to probabilistically assign single-cell transcriptomes to specific donor 
-individuals, and to detect doublets that are from two different donors. 
-Crucially, Vireo does not require any genotype reference for input donors to 
-demultiplex, but keeps a flexibility to use the genotype information 
-if it is available in any sub set or all donors.
-
-Briefly, Vireo is a Bayesian hierarchical model, where the donor identity of 
-each cell and the genotype of each donor is unknown variables. In addition, 
-binomial base model is applied to model the minor allele reads distribution, 
-which also accounts for the sequencing errors. A mean field variational 
-inference is employed here approximate the joint posterior distribution of cell 
-identity, donor genotype, and the minor allele rates.
-
-The input data are two matrices, `A` and `D` for ALT and depth (i.e. ALT + REF), 
-respectively, and the size in a typical experiment is 10,000 common SNPs across 
-10,000 cells. Computation on this size won't be fast, however, this data set is 
-highly sparse (~99% missing values). Our impeletation of Vireo takes the 
-benefits of sparse matrix in R, hence largely saves memory space and computing 
-time. `Vireo` is implemented as R functions in package `r Biocpkg("cardelino")`.
 
 
 # Demultiplexing without genotype reference
@@ -91,8 +43,8 @@ file on a list of common SNPs by the multifaceted
 [`cellSNP`](https://github.com/huangyh09/cellSNP), Python package based on pysam.
 
 Here, we demonstrate the use of `Vireo` to assign 384 cells to 3 donors by 2,171 
-SNPs, which can be loaded from `r Biocpkg("cardelino")` package directly, via a 
-function `load_cellSNP_vcf` based on `r Biocpkg("vcfR")`.
+SNPs, which can be loaded from `cardelino` package directly, via a 
+function `load_cellSNP_vcf` based on `vcfR` package.
 
 
 ```{r load-pkg}
@@ -154,8 +106,8 @@ for which a **donor VCF file**.
 * donor VCF file: a VCF file containing genotypes for each of the multiplexed
 donors.
 
-Now we load the donor VCF file `load_GT_vcf` from `r Biocpkg("cardelino")` based
-on `r Biocpkg("vcfR")` again. Note, the variants needed be matched between cell
+Now we load the donor VCF file `load_GT_vcf` from `cardelino` package based
+on `vcfR` package again. Note, the variants needed be matched between cell
 and donor data before sent to `vireo`, which can be achieved as follows.
 
 ```{r load GT data}

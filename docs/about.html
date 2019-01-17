@@ -11,7 +11,7 @@
 
 
 
-<title>About</title>
+<title>About Vireo</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -187,15 +187,18 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
+  <a href="about.html">About</a>
+</li>
+<li>
   <a href="examples.html">Examples</a>
 </li>
 <li>
-  <a href="license.html">License</a>
+  <a href="simulation.html">Simulation</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/huangyh09/vireo">
+  <a href="https://github.com/huangyh09/vireo-manual">
     <span class="fa fa-github"></span>
      
   </a>
@@ -216,37 +219,51 @@ div.section {
 
 
 
-<h1 class="title toc-ignore">About</h1>
+<h1 class="title toc-ignore">About Vireo</h1>
 
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-12-22</p>
+<p><strong>Last updated:</strong> 2019-01-17</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<details>
+<p><summary> <strong style="color:red;">&#10006;</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> 694896e </summary></p>
+<details>
+<p><summary> <strong style="color:blue;">&#10004;</strong> <strong>Repository version:</strong> <a href="https://github.com/huangyh09/vireo-manual/tree/9c547b0d432b798ecb9bcf2c72a6b1c3c59d352a" target="_blank">9c547b0</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    data/.DS_Store
+    Ignored:    docs/.DS_Store
 
 Untracked files:
-    Untracked:  docs/figure/
+    Untracked:  analysis/simulation.Rmd
+    Untracked:  data/GT_val.genome1K.donors20.rds
+    Untracked:  data/demux.ctrl.AnD.gm1K.rds
+    Untracked:  data/simu.geneASE.example.rds
 
 Unstaged changes:
+    Modified:   README.md
     Modified:   analysis/_site.yml
+    Modified:   analysis/about.Rmd
+    Modified:   analysis/examples.Rmd
+    Modified:   analysis/index.Rmd
 
 </code></pre>
-Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</details>
 </li>
 </ul>
-<details> <summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
+<details>
+<summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
 <ul>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -271,10 +288,27 @@ Message
 <tbody>
 <tr>
 <td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/huangyh09/vireo-manual/9c547b0d432b798ecb9bcf2c72a6b1c3c59d352a/docs/about.html" target="_blank">9c547b0</a>
+</td>
+<td style="text-align:left;">
+huangyh09
+</td>
+<td style="text-align:left;">
+2018-12-22
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 Rmd
 </td>
 <td style="text-align:left;">
-fcf6d7c
+<a href="https://github.com/huangyh09/vireo-manual/blob/fcf6d7cd75165805c5bf873a2dbdf7e71e57bee7/analysis/about.Rmd" target="_blank">fcf6d7c</a>
 </td>
 <td style="text-align:left;">
 huangyh09
@@ -289,9 +323,14 @@ Start workflowr project.
 </tbody>
 </table>
 </ul>
-<p></details></p>
+</details>
 <hr />
-<p>Describe your project.</p>
+<p>This document gives an introduction and usage manual of <code>Vireo</code> (Variational inference for reconstructing ensemble origins), a Bayesian method to demultiplex pooled scRNA-seq data without genotype reference.</p>
+<p>Many single-cell genomics studies can be enhanced by multiplexing donors, where cells from multiple genetically distinct individuals (“donors”) are assayed together in a mixed population. Such experimental designs can be powerful for reducing cost of studies assaying cells from many donors and for enabling robustness to inevitable batch effects.</p>
+<p>When cells from multiple donors are mixed together, the donors that each cell origins are unknown at the time of sequencing. However, natural genetic variation (specifically, single nucleotide polymorphisms, SNP) act as natural barcodes capturing the donor identity of each cell. Appropriate computational methods, such as <code>Vireo</code> here, can infer the donor identity for each cell and thus “demultiplex” a population of cells from multiple donors in preparation of the dataset for further downstream analysis.</p>
+<p><code>Vireo</code> can use variant information extracted from single-cell RNA-seq data, which can be most platforms, including droplet, 10X genomics, smart-seq, to probabilistically assign single-cell transcriptomes to specific donor individuals, and to detect doublets that are from two different donors. Crucially, Vireo does not require any genotype reference for input donors to demultiplex, but keeps a flexibility to use the genotype information if it is available in any sub set or all donors.</p>
+<p>Briefly, Vireo is a Bayesian hierarchical model, where the donor identity of each cell and the genotype of each donor is unknown variables. In addition, binomial base model is applied to model the minor allele reads distribution, which also accounts for the sequencing errors. A mean field variational inference is employed here approximate the joint posterior distribution of cell identity, donor genotype, and the minor allele rates.</p>
+<p>The input data are two matrices, <code>A</code> and <code>D</code> for ALT and depth (i.e. ALT + REF), respectively, and the size in a typical experiment is 10,000 common SNPs across 10,000 cells. Computation on this size won’t be fast, however, this data set is highly sparse (~99% missing values). Our impeletation of Vireo takes the benefits of sparse matrix in R, hence largely saves memory space and computing time. <code>Vireo</code> is implemented as R functions in package <code>cardelino</code>.</p>
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
 TeX fonts only; see

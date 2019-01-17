@@ -1,0 +1,273 @@
+---
+title: "Using simulation to evaluate experiment designs"
+output:
+  workflowr::wflow_html:
+    toc: false
+---
+
+In this totorial, we will show how to use `donor_read_simulator` and other 
+functions in cardelino package to evaluate the designs of multiplexed scRNA-seq 
+experiments, including number of total reads, number of pooled donors, and 
+loading cells.
+
+The experiment design is important since the demultiplexing is more difficult 
+when genotype is not available. Normally, given the genotype, especially the 
+ones with high large volumn and high accuracy from genotype array or genome / 
+exome sequencing, it is relatively easy to demultiplex pooled samples in a wide 
+range of experiment designs.
+
+
+# Load packages and data
+
+First, let us load packages and have a look of the simulation seed data. 
+```{r knitr-options, echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(fig.align = 'center', fig.width = 6, fig.height = 5, dev = 'png',
+    warning = FALSE, error = FALSE, message = FALSE)
+library(ggpubr)
+library(cardelino)
+theme_set(theme_bw(12))
+```
+
+All data needed is located in this package. In the `data` folder, there are two 
+files to use:
+
+* `demux.ctrl.AnD.gm1K.rds`: containing two matrices: `A` and `D`, for the 
+read counts of alternative alleles and sequencing coverage or depth in one 
+control sample from demulet paper: 18005 SNPs aross 14619 cells.
+
+* `GT_val.genome1K.donors20.rds`: containing the genotype data `GT` for 20 
+donors from thousands genome project. For more 100-donor data set, you can 
+download [here](https://sourceforge.net/projects/cellsnp/files/rdata/GT_val.genome1K.donors100.rds).
+```{r load-data}
+# setwd("/Users/huangh/MyGit/vireo-manual")
+cell_dat <- readRDS("data/demux.ctrl.AnD.gm1K.rds")
+GT_dat <- readRDS("data/GT_val.genome1K.donors20.rds")
+
+print(paste("cell data:", nrow(cell_dat$D), "SNPs", ncol(cell_dat$D), "cells."))
+print(paste("missing rate:", round(mean(cell_dat$D == 0), 5)))
+
+print(paste("donor GT data dimentions:", t(dim(GT_dat$GT))))
+print(head(GT_dat$GT))
+```
+
+# Set the experiment design parameters
+
+Set the experiment parameters here. Let us try a typical pooled experiment data 
+with 5000 cells from 4 donors. Customise it to your design.
+```{r design parameters}
+n_cells <- 5000
+n_donors <- 4
+doublet_rate <- n_cells / 100000
+donor_fractions <- rep(1 / n_donors, n_donors)
+gene_ASE <- TRUE ## gene specific allelic expression
+```
+
+
+Before generating the reads, we need to down sample the donor genotype data to 
+the given number of donors and the given number of variable SNPs (18,005 here). 
+Given the depth seed matrix, and the known genotype of the donors, the simulator
+generates the reads by the following three steps:
+
+1. Uniformly sample the depths profiles `D` from cells in the seed matrix 
+   `D_input`. Note, it only samples the column, i.e., cells. If needed, it can 
+   shuffle the row, i.e., SNPs beforehand. 
+2. Generate the binomial parameters for the three genotypes: 0 (hom_ref), 
+   1 (het) and 2 (hom_alt). By default, it follows a beta distribution:
+  $$p_0 \sim \beta(0.3, 29.7), p_1 \sim \beta(3.0, 3.0), p_2 \sim \beta(29.7, 0.3)$$
+   If the parameter `gene_ASE` is TRUE, we generate the parameters 
+   [p_0, p_1, p_2] for each SNP individually. Also, this beta distribution
+   can be custermised, though it is already optimised in common case.
+3. Once obtained the depth of each SNP in each cell, and its binomial parameter,
+   we can directly sample the read counts for the alternative alleles, i.e.
+   matrix `A`
+
+```{r reads generating}
+# random seed to keep it reproducible
+set.seed(0)
+
+# Depths seed for simulation
+D_input <- cell_dat$D
+
+# sample donors and remove variants that are the same in sampled donors
+GT_use <- GT_dat$GT[, sample(ncol(GT_dat$GT), n_donors)]
+GT_use <- GT_use[rowMeans(GT_use) != rowMax(GT_use), ] 
+
+# sub sample variants to the same number as D_input
+idx_use <- sample(nrow(GT_use), nrow(D_input))
+GT_use <- GT_use[idx_use, ]
+row.names(GT_use) <- paste0("SNP", seq_len(nrow(GT_use)))
+
+# generate simulated reads
+dat_sim <- donor_read_simulator(GT_use, D_input, n_cell = n_cells,
+                                gene_ASE = gene_ASE, 
+                                donor_size = donor_fractions,
+                                doublet_rate = doublet_rate)
+
+# save the simulated data if you want
+# saveRDS(dat_sim, "data/simu.geneASE.example.rds")
+```
+
+From the simulator, the output list variable contains randomly generated reads
+matrices `A` and `D`, as well as the ground truth of genotype `GT` and cell 
+identity `I_sim`, and the binomial parameter `p_sim`.
+
+
+# Demultiplex with Viroe
+
+Given the simulated data following the experiment design, we can demultiplex 
+the data with Vireo without genotype reference. 
+
+```{r vireo without GT}
+ids <- vireo(cell_data = dat_sim, n_donor = n_donors)
+table(ids$assigned$donor_id)
+```
+
+```{r plot-doublet, fig.height=4, fig.width=6}
+fig_part1 <- ggplot(ids$assigned, aes(n_vars, prob_doublet, 
+                                      colour = donor_id)) +
+  geom_point(alpha = 0.5) + scale_x_log10() + theme_bw()
+fig_part2 <- ggplot(ids$assigned, aes(n_vars, prob_max, colour = donor_id)) +
+  geom_point(alpha = 0.5) + scale_x_log10() +  theme_bw()
+
+ggpubr::ggarrange(fig_part1, fig_part2, nrow = 2, align = "v")
+```
+
+
+# Evaluate the performance of demultiplexing
+
+## Singlet assignment and doublet detection
+
+First, let us evaluate the performance of Vireo in singlet assignment and 
+doublet detection. By default, we use the prob_max >= 0.9 (i.e., the highest 
+probability assigning to a donor) for confident assignment, and use 
+prob_doublet >= 0.9 (i.e., the summarized probability of a doublet) for 
+confident doublet detection.
+
+The singlet assignment and doublet detection can be visualised as follow.
+
+```{r scatter default, fig.height=4, fig.width=6}
+ids$assigned$color_id <- ids$assigned$donor_id
+ids$assigned$color_id[ids$assigned$color_id != "doublet" & 
+                         ids$assigned$color_id != "unassigned"] <- "singlet"
+ids$assigned$color_id[ids$assigned$color_id == "unassigned"] <- "unsure"
+
+ids$assigned$Truth <- rep("singlet", ncol(ids$D)) 
+ids$assigned$Truth[rowSums(dat_sim$I_sim > 0) > 1] <- "doublet"
+
+ggplot(ids$assigned, aes(n_vars, prob_max, 
+                         colour = color_id, shape=Truth)) +
+  geom_point(alpha = 0.7) + xlim(0, 400) + 
+  scale_color_manual(values = c("#55C667FF", "#39568CFF", "gray40"),
+                     name = "Assigned") +
+  scale_shape_manual(values = c(2, 1), name = "True label") +
+  scale_y_continuous(breaks = seq(0, 1, 0.2))
+```
+
+Addtionally, we can explore the overall performance by precision-recall curve 
+with varying the threshold. The Area Under the Precision-Recall Curve (AUPRC) 
+can be used as a summarised score for the overall performance.
+
+```{r PR curve, fig.height=4, fig.width=6}
+ass_db <- assign_scores(ids$prob, dat_sim$I_sim)
+
+print(paste("Doublet, cutoff = 0.9: Recall =", 
+            round(ass_db$df_db$Recall[ass_db$df_db$cutoff == 0.1][1], 3),
+            "Precision = ", 
+            round(ass_db$df_db$Precision[ass_db$df_db$cutoff == 0.1][1], 3)))
+print(paste("Doublet, cutoff = 0.1: Recall =", 
+            round(ass_db$df_db$Recall[ass_db$df_db$cutoff == 0.9][1], 3),
+            "Precision = ", 
+            round(ass_db$df_db$Precision[ass_db$df_db$cutoff == 0.9][1], 3)))
+
+ass_db$df_sg <- rbind(ass_db$df_sg, c(0, 1, 0))
+db_name = paste0("Doublet:", round(ass_db$AUC_db, 4))
+sg_name = paste0("Singlet:", round(ass_db$AUC_sg, 4))
+df <- as.data.frame(
+        rbind(data.frame(ass_db$df_db, 
+                         AUPRC = rep(db_name, nrow(ass_db$df_db))),
+              data.frame(ass_db$df_sg, 
+                         AUPRC = rep(sg_name, nrow(ass_db$df_sg)))))
+
+ggplot(df, aes(x = Recall, y = Precision)) + 
+  geom_line(aes(color = AUPRC)) + 
+  geom_point(aes(color = AUPRC), size=2) + 
+  scale_color_manual(values = c("#55C667FF", "#39568CFF")) + 
+  xlab("Detection rate (recall)") + 
+  scale_x_continuous(breaks = seq(0,1,0.2)) +
+  scale_y_continuous(breaks = seq(0,1,0.2)) + 
+  ylab("Precision")
+```
+
+
+
+## Genotype estimate
+Then, we can evaluate the accuracy of genotype estimate, by comparing the input
+genotype and estimated `GT_prob` or `GT`. There are three genotypes, and they 
+have different frequencys, so we will evalate them separately. 
+
+```{r process GT}
+# freqency of input genotype and estimated genotype
+table(dat_sim$GT)
+table(ids$GT)
+
+# rearange the vireo estimated donors to match the input donors
+col_idx <- colMatch(dat_sim$I_sim, ids$prob)
+t(col_idx)
+
+# Estimated genotype by using highest probability
+GT_probMax <- matrix(rowMax(ids$GT_prob), nrow = nrow(ids$D))
+GT_val <- matrix(rowArgmax(ids$GT_prob) - 1, nrow = nrow(ids$D))
+
+# rank SNPs by total reads, and categorised by genotype
+df.GT <- data.frame(SNP = rep(row.names(dat_sim$GT), ncol(dat_sim$GT)),
+                   donor = rep(ncol(dat_sim$GT), each = nrow(dat_sim$GT)),
+                   GT = c(dat_sim$GT), 
+                   GT_est = c(GT_val[, col_idx]), 
+                   correct = c(GT_val[, col_idx] == dat_sim$GT),
+                   GT_prob = c(GT_probMax[, col_idx]),
+                   expr_times = matrix(((ids$D > 0) %*% ids$prob)[, col_idx]),
+                   total_read = matrix((ids$D %*% ids$prob)[, col_idx]))
+
+head(df.GT, 10)
+```
+
+```{r plot GT estimate, fig.height=4, fig.width=6}
+library(viridis)
+df.GT <- df.GT[order(df.GT$total_read, decreasing = TRUE), ]
+Top_SNP <- c(10, 30, 100, 300, 1000, 3000, 10000, 24000, 37000)
+
+df.out <- data.frame(Genotype = rep(c("hom_ref", "het", "hom_alt"), 
+                                    each = length(Top_SNP)),
+                     Top_list = rep(Top_SNP, 3),
+                     GT_acc = rep(NA, length(Top_SNP) * 3), 
+                     UMI_count = rep(NA, length(Top_SNP) * 3))
+
+# Calculate cummunitive accuracy
+for (gt in c(0, 1, 2)) {
+  df.tmp <- df.GT[df.GT$GT == gt, ]
+  for (ii in seq_len(length(Top_SNP))) {
+    if (nrow(df.tmp) < Top_SNP[ii]) {
+      df.out$GT_acc[gt * length(Top_SNP) + ii] <- NA
+      df.out$UMI_count[gt * length(Top_SNP) + ii] <- NA
+    } else {
+      df.out$GT_acc[gt * length(Top_SNP) + ii] <-
+        mean(df.tmp$correct[1:Top_SNP[ii]])
+      df.out$UMI_count[gt * length(Top_SNP) + ii] <- 
+        median(df.tmp$total_read[1:Top_SNP[ii]])
+    }
+  }
+}
+head(df.out)
+
+# plot figure
+ggplot(df.out, aes(x=Top_list, y=GT_acc)) + 
+  geom_line(aes(color = UMI_count, shape = Genotype)) + 
+  geom_point(aes(color = UMI_count, shape = Genotype), size=3) + 
+  scale_color_viridis(option = "D", name = "UMI count", trans = "log10") +
+  scale_x_continuous(tran="log10") + ylim(0, 1) +
+  ylab("Genotype precision") + xlab("Top expressed variants")
+```
+
+
+

@@ -1,17 +1,19 @@
-name: "vireo-manual"
+name: "vireo"
 output_dir: "../docs"
 navbar:
-  title: "vireo-manual"
+  title: "vireo"
   left:
     - text: "Home"
       href: index.html
     - text: "About"
       href: about.html
-    - text: "License"
-      href: license.html
+    - text: "Examples"
+      href: examples.html
+    - text: "Simulation"
+      href: simulation.html
   right:
     - icon: fa-github
-      href: https://github.com/jdblischak/workflowr
+      href: https://github.com/huangyh09/vireo-manual
 output:
   workflowr::wflow_html:
     toc: true

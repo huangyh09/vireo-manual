@@ -187,15 +187,18 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
+  <a href="about.html">About</a>
+</li>
+<li>
   <a href="examples.html">Examples</a>
 </li>
 <li>
-  <a href="license.html">License</a>
+  <a href="simulation.html">Simulation</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/huangyh09/vireo">
+  <a href="https://github.com/huangyh09/vireo-manual">
     <span class="fa fa-github"></span>
      
   </a>
@@ -221,32 +224,48 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-12-22</p>
+<p><strong>Last updated:</strong> 2019-01-17</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<details>
+<p><summary> <strong style="color:red;">&#10006;</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> 694896e </summary></p>
+<details>
+<p><summary> <strong style="color:blue;">&#10004;</strong> <strong>Repository version:</strong> <a href="https://github.com/huangyh09/vireo-manual/tree/9c547b0d432b798ecb9bcf2c72a6b1c3c59d352a" target="_blank">9c547b0</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    data/.DS_Store
+    Ignored:    docs/.DS_Store
 
 Untracked files:
-    Untracked:  docs/figure/
+    Untracked:  analysis/simulation.Rmd
+    Untracked:  data/GT_val.genome1K.donors20.rds
+    Untracked:  data/demux.ctrl.AnD.gm1K.rds
+    Untracked:  data/simu.geneASE.example.rds
+    Untracked:  docs/figure/simulation.Rmd/
 
 Unstaged changes:
+    Modified:   .gitignore
+    Modified:   README.md
     Modified:   analysis/_site.yml
+    Modified:   analysis/about.Rmd
+    Modified:   analysis/examples.Rmd
+    Modified:   analysis/index.Rmd
 
 </code></pre>
-Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</details>
 </li>
 </ul>
-<details> <summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
+<details>
+<summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
 <ul>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -271,10 +290,27 @@ Message
 <tbody>
 <tr>
 <td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/huangyh09/vireo-manual/9c547b0d432b798ecb9bcf2c72a6b1c3c59d352a/docs/index.html" target="_blank">9c547b0</a>
+</td>
+<td style="text-align:left;">
+huangyh09
+</td>
+<td style="text-align:left;">
+2018-12-22
+</td>
+<td style="text-align:left;">
+Build site.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 Rmd
 </td>
 <td style="text-align:left;">
-fcf6d7c
+<a href="https://github.com/huangyh09/vireo-manual/blob/fcf6d7cd75165805c5bf873a2dbdf7e71e57bee7/analysis/index.Rmd" target="_blank">fcf6d7c</a>
 </td>
 <td style="text-align:left;">
 huangyh09
@@ -289,9 +325,27 @@ Start workflowr project.
 </tbody>
 </table>
 </ul>
-<p></details></p>
+</details>
 <hr />
-<p>Welcome to my research website.</p>
+<p>Welcome to the documentation of <code>Vireo</code> for demultiplexing of pooled scRNA-seq data without or with (part) reference. <code>Vireo</code> is part of <a href="https://github.com/PMBio/cardelino">cardelino</a> R package.</p>
+<p>Vireo provides two major fuctions:</p>
+<ol style="list-style-type: decimal">
+<li><code>vireo</code>: demultiplexing of pooled scRNA-seq data. See <a href="examples.html">Examples</a> for quick usage</li>
+<li><code>donor_read_simulator</code>: simualting reads to evaluate experiment designs on its performance in cell assignment, doublets detection and genotype estimate of each donor. See <a href="simulation.html">Simulator</a> for performing simulation for experiment design.</li>
+</ol>
+<div id="quick-introduction" class="section level2">
+<h2>Quick introduction</h2>
+<p>We also provide a few lines about multiplexed scRNA-seq experiment and the ideas behind <code>Vireo</code>, see the <a href="about.html">About</a> page.</p>
+</div>
+<div id="genotyping-cells" class="section level2">
+<h2>Genotyping cells</h2>
+<p>Piling up a list of common variants is the first step for demultiplixing with <code>Vireo</code>, which requires a variant call format (VCF) file (SNP-by-cells). This VCF can be obtained by piling up the bam file on a list of common SNPs by the multifaceted <a href="http://www.htslib.org/doc/bcftools.html"><code>bcftools</code></a> or our tailored designed <a href="https://github.com/huangyh09/cellSNP"><code>cellSNP</code></a>, a Python package based on pysam.</p>
+<p>We highly recommend our <code>cellSNP</code>, which even support de-novo piling up a whole genome if a common variants is not available for the species in the study. For human, a list of common variant give sufficiently good performance.</p>
+</div>
+<div id="reference" class="section level2">
+<h2>Reference</h2>
+<p>comign soon.</p>
+</div>
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
 TeX fonts only; see
