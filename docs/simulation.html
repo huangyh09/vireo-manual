@@ -22,9 +22,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -72,9 +71,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -99,6 +96,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -113,7 +113,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -133,6 +132,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -154,19 +190,85 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
 });
 </script>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -224,36 +326,149 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2019-01-17</p>
-<strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
-<ul>
-<li>
-<details>
-<p><summary> <strong style="color:red;">&#10006;</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
-</details>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<details>
-<p><summary> <strong style="color:blue;">&#10004;</strong> <strong>Environment:</strong> empty </summary></p>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-07-15
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>vireo-manual/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
 <p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
-</details>
-</li>
-<li>
-<details>
-<p><summary> <strong style="color:blue;">&#10004;</strong> <strong>Seed:</strong> <code>set.seed(20181222)</code> </summary></p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20181222code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20181222)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20181222code" class="panel-collapse collapse">
+<div class="panel-body">
 <p>The command <code>set.seed(20181222)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
-</details>
-</li>
-<li>
-<details>
-<p><summary> <strong style="color:blue;">&#10004;</strong> <strong>Session information:</strong> recorded </summary></p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
 <p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
-</details>
-</li>
-<li>
-<details>
-<p><summary> <strong style="color:blue;">&#10004;</strong> <strong>Repository version:</strong> <a href="https://github.com/huangyh09/vireo-manual/tree/9c547b0d432b798ecb9bcf2c72a6b1c3c59d352a" target="_blank">9c547b0</a> </summary></p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+</p>
+</div>
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Using absolute paths to the files within your workflowr project makes it difficult for you and others to run your code on a different machine. Change the absolute path(s) below to the suggested relative path(s) to make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/Users/huangh/MyGit/vireo-manual
+</td>
+<td style="text-align:left;">
+.
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhuangyh09vireomanualtreefd34601f1a4b4405f8d91ec7c916b319cb6aca67targetblankfd34601a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/huangyh09/vireo-manual/tree/fd34601f1a4b4405f8d91ec7c916b319cb6aca67" target="_blank">fd34601</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomhuangyh09vireomanualtreefd34601f1a4b4405f8d91ec7c916b319cb6aca67targetblankfd34601a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
@@ -262,25 +477,24 @@ Ignored files:
     Ignored:    data/.DS_Store
     Ignored:    docs/.DS_Store
 
-Untracked files:
-    Untracked:  analysis/simulation.Rmd
-    Untracked:  data/GT_val.genome1K.donors20.rds
-    Untracked:  data/demux.ctrl.AnD.gm1K.rds
-    Untracked:  data/simu.geneASE.example.rds
-
-Unstaged changes:
-    Modified:   README.md
-    Modified:   analysis/_site.yml
-    Modified:   analysis/about.Rmd
-    Modified:   analysis/examples.Rmd
-    Modified:   analysis/index.Rmd
-
 </code></pre>
+<p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
-</details>
-</li>
-</ul>
-<hr />
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
 <p>In this totorial, we will show how to use <code>donor_read_simulator</code> and other functions in cardelino package to evaluate the designs of multiplexed scRNA-seq experiments, including number of total reads, number of pooled donors, and loading cells.</p>
 <p>The experiment design is important since the demultiplexing is more difficult when genotype is not available. Normally, given the genotype, especially the ones with high large volumn and high accuracy from genotype array or genome / exome sequencing, it is relatively easy to demultiplex pooled samples in a wide range of experiment designs.</p>
 <div id="load-packages-and-data" class="section level1">
@@ -336,7 +550,7 @@ gene_ASE &lt;- TRUE ## gene specific allelic expression</code></pre>
 <ol style="list-style-type: decimal">
 <li>Uniformly sample the depths profiles <code>D</code> from cells in the seed matrix <code>D_input</code>. Note, it only samples the column, i.e., cells. If needed, it can shuffle the row, i.e., SNPs beforehand.</li>
 <li>Generate the binomial parameters for the three genotypes: 0 (hom_ref), 1 (het) and 2 (hom_alt). By default, it follows a beta distribution: <span class="math display">\[p_0 \sim \beta(0.3, 29.7), p_1 \sim \beta(3.0, 3.0), p_2 \sim \beta(29.7, 0.3)\]</span> If the parameter <code>gene_ASE</code> is TRUE, we generate the parameters [p_0, p_1, p_2] for each SNP individually. Also, this beta distribution can be custermised, though it is already optimised in common case.</li>
-<li>Once obtained the depth of each SNP in each cell, and its binomial parameter, we can directly sample the read counts for the alternative alleles, i.e. matrix <code>A</code></li>
+<li>Once obtained the depth of each SNP in each cell, and its binomial parameter, we can directly sample the read counts for the alternative alleles, i.e. matrix <code>A</code></li>
 </ol>
 <pre class="r"><code># random seed to keep it reproducible
 set.seed(0)
@@ -355,7 +569,7 @@ row.names(GT_use) &lt;- paste0(&quot;SNP&quot;, seq_len(nrow(GT_use)))
 
 # generate simulated reads
 dat_sim &lt;- donor_read_simulator(GT_use, D_input, n_cell = n_cells,
-                                gene_ASE = gene_ASE, 
+                                #gene_ASE = gene_ASE, 
                                 donor_size = donor_fractions,
                                 doublet_rate = doublet_rate)
 
@@ -369,17 +583,17 @@ dat_sim &lt;- donor_read_simulator(GT_use, D_input, n_cell = n_cells,
 <pre class="r"><code>ids &lt;- vireo(cell_data = dat_sim, n_donor = n_donors)</code></pre>
 <pre><code>RUN1: 4 random initializations...
             [,1]      [,2]      [,3]      [,4]
-n_iter      36.0      31.0      39.0      32.0
-LBound -294289.1 -295659.3 -291249.9 -294230.2
+n_iter      34.0      25.0      28.0      50.0
+LBound -327464.7 -330423.1 -333745.4 -335785.1
 RUN1: Search in 6 donors. Estimated sizes:
-     donor5 donor2 donor1 donor6 donor3 donor4
-[1,] 1250.6 1199.6 1173.3 1093.3   32.8      1
+     donor1 donor5 donor2 donor4 donor6 donor3
+[1,] 1216.3 1215.3 1174.9 1148.2   24.3    4.8
 RUN2: Tuning the largest 4 donors with genotype prior estimated from RUN1.
-Finished in 49.93 sec.</code></pre>
+Finished in 42.6 sec.</code></pre>
 <pre class="r"><code>table(ids$assigned$donor_id)</code></pre>
 <pre><code>
     donor1     donor2     donor3     donor4    doublet unassigned 
-      1246       1195       1170       1200        155         34 </code></pre>
+      1214       1205       1217       1145        175         44 </code></pre>
 <pre class="r"><code>fig_part1 &lt;- ggplot(ids$assigned, aes(n_vars, prob_doublet, 
                                       colour = donor_id)) +
   geom_point(alpha = 0.5) + scale_x_log10() + theme_bw()
@@ -414,18 +628,18 @@ ggplot(ids$assigned, aes(n_vars, prob_max,
 <p>Addtionally, we can explore the overall performance by precision-recall curve with varying the threshold. The Area Under the Precision-Recall Curve (AUPRC) can be used as a summarised score for the overall performance.</p>
 <pre class="r"><code>ass_db &lt;- assign_scores(ids$prob, dat_sim$I_sim)</code></pre>
 <pre><code>     [,1] [,2] [,3] [,4]
-[1,]    2    3    4    1
-[1] &quot;181 samples have multiple labels.&quot;</code></pre>
+[1,]    1    3    2    4
+[1] &quot;190 samples have multiple labels.&quot;</code></pre>
 <pre class="r"><code>print(paste(&quot;Doublet, cutoff = 0.9: Recall =&quot;, 
             round(ass_db$df_db$Recall[ass_db$df_db$cutoff == 0.1][1], 3),
             &quot;Precision = &quot;, 
             round(ass_db$df_db$Precision[ass_db$df_db$cutoff == 0.1][1], 3)))</code></pre>
-<pre><code>[1] &quot;Doublet, cutoff = 0.9: Recall = 0.856 Precision =  1&quot;</code></pre>
+<pre><code>[1] &quot;Doublet, cutoff = 0.9: Recall = 0.905 Precision =  0.983&quot;</code></pre>
 <pre class="r"><code>print(paste(&quot;Doublet, cutoff = 0.1: Recall =&quot;, 
             round(ass_db$df_db$Recall[ass_db$df_db$cutoff == 0.9][1], 3),
             &quot;Precision = &quot;, 
             round(ass_db$df_db$Precision[ass_db$df_db$cutoff == 0.9][1], 3)))</code></pre>
-<pre><code>[1] &quot;Doublet, cutoff = 0.1: Recall = 0.867 Precision =  0.835&quot;</code></pre>
+<pre><code>[1] &quot;Doublet, cutoff = 0.1: Recall = 0.916 Precision =  0.802&quot;</code></pre>
 <pre class="r"><code>ass_db$df_sg &lt;- rbind(ass_db$df_sg, c(0, 1, 0))
 db_name = paste0(&quot;Doublet:&quot;, round(ass_db$AUC_db, 4))
 sg_name = paste0(&quot;Singlet:&quot;, round(ass_db$AUC_sg, 4))
@@ -452,16 +666,16 @@ ggplot(df, aes(x = Recall, y = Precision)) +
 table(dat_sim$GT)</code></pre>
 <pre><code>
     0     1     2 
-37423 24815  9782 </code></pre>
+37366 25497  9157 </code></pre>
 <pre class="r"><code>table(ids$GT)</code></pre>
 <pre><code>
     0     1     2 
-43521 14120 14379 </code></pre>
+43299 16339 12382 </code></pre>
 <pre class="r"><code># rearange the vireo estimated donors to match the input donors
 col_idx &lt;- colMatch(dat_sim$I_sim, ids$prob)
 t(col_idx)</code></pre>
 <pre><code>     [,1] [,2] [,3] [,4]
-[1,]    2    3    4    1</code></pre>
+[1,]    1    3    2    4</code></pre>
 <pre class="r"><code># Estimated genotype by using highest probability
 GT_probMax &lt;- matrix(rowMax(ids$GT_prob), nrow = nrow(ids$D))
 GT_val &lt;- matrix(rowArgmax(ids$GT_prob) - 1, nrow = nrow(ids$D))
@@ -478,16 +692,16 @@ df.GT &lt;- data.frame(SNP = rep(row.names(dat_sim$GT), ncol(dat_sim$GT)),
 
 head(df.GT, 10)</code></pre>
 <pre><code>     SNP donor GT GT_est correct   GT_prob expr_times total_read
-1   SNP1     4  1      1    TRUE 0.9863636   3.000000   3.000000
-2   SNP2     4  0      0    TRUE 0.7991668   1.000000   1.000000
-3   SNP3     4  1      0   FALSE 0.9992280  12.000000  12.000000
-4   SNP4     4  0      0    TRUE 0.9992516   5.999995   5.999995
-5   SNP5     4  0      0    TRUE 0.9999994  15.999974  15.999974
-6   SNP6     4  1      1    TRUE 0.9999996  16.999953  16.999953
-7   SNP7     4  1      1    TRUE 0.9999939  11.000000  11.000000
-8   SNP8     4  0      0    TRUE 0.9418238   2.000000   2.000000
-9   SNP9     4  2      2    TRUE 1.0000000  33.163673  44.163673
-10 SNP10     4  0      0    TRUE 0.9984809   3.999954   4.999954</code></pre>
+1   SNP1     4  0      0    TRUE 0.7885073  1.0000000  1.0000000
+2   SNP2     4  0      0    TRUE 0.9812779  3.0000000  3.0000000
+3   SNP3     4  0      0    TRUE 0.9990402  5.9999990  5.9999990
+4   SNP4     4  1      1    TRUE 0.9998165  3.9999998  3.9999998
+5   SNP5     4  1      1    TRUE 1.0000000 16.9999231 16.9999231
+6   SNP6     4  0      0    TRUE 0.9999988 15.9999231 15.9999231
+7   SNP7     4  1      1    TRUE 0.9999997 10.9999961 10.9999961
+8   SNP8     4  2      2    TRUE 0.8036140  0.9999385  0.9999385
+9   SNP9     4  0      0    TRUE 1.0000000 41.9999862 52.9999862
+10 SNP10     4  0      0    TRUE 0.9333474  2.0000000  2.0000000</code></pre>
 <pre class="r"><code>library(viridis)
 df.GT &lt;- df.GT[order(df.GT$total_read, decreasing = TRUE), ]
 Top_SNP &lt;- c(10, 30, 100, 300, 1000, 3000, 10000, 24000, 37000)
@@ -515,12 +729,12 @@ for (gt in c(0, 1, 2)) {
 }
 head(df.out)</code></pre>
 <pre><code>  Genotype Top_list    GT_acc  UMI_count
-1  hom_ref       10 1.0000000 5042.53943
-2  hom_ref       30 1.0000000 2704.77746
-3  hom_ref      100 1.0000000 1374.34376
-4  hom_ref      300 0.9933333  415.44839
-5  hom_ref     1000 0.9970000   95.95370
-6  hom_ref     3000 0.9943333   28.99848</code></pre>
+1  hom_ref       10 1.0000000 3119.37887
+2  hom_ref       30 1.0000000 2012.06749
+3  hom_ref      100 1.0000000 1103.86401
+4  hom_ref      300 0.9966667  393.41417
+5  hom_ref     1000 0.9970000   90.99951
+6  hom_ref     3000 0.9990000   28.00000</code></pre>
 <pre class="r"><code># plot figure
 ggplot(df.out, aes(x=Top_list, y=GT_acc)) + 
   geom_line(aes(color = UMI_count, shape = Genotype)) + 
@@ -529,17 +743,21 @@ ggplot(df.out, aes(x=Top_list, y=GT_acc)) +
   scale_x_continuous(tran=&quot;log10&quot;) + ylim(0, 1) +
   ylab(&quot;Genotype precision&quot;) + xlab(&quot;Top expressed variants&quot;)</code></pre>
 <p><img src="figure/simulation.Rmd/plot%20GT%20estimate-1.png" width="576" style="display: block; margin: auto;" /></p>
-</div>
-<div id="session-information" class="section level2">
-<h2>Session information</h2>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>R version 3.5.2 (2018-12-20)
+<pre><code>R version 3.6.1 (2019-07-05)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS Mojave 10.14.2
+Running under: macOS Mojave 10.14.5
 
 Matrix products: default
-BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
-LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
 
 locale:
 [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
@@ -548,59 +766,60 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] viridis_0.5.1     viridisLite_0.3.0 cardelino_0.2.6   ggpubr_0.1.7     
-[5] magrittr_1.5      ggplot2_3.1.0     knitr_1.20       
+[1] viridis_0.5.1     viridisLite_0.3.0 cardelino_0.4.2   ggpubr_0.2       
+[5] magrittr_1.5      ggplot2_3.1.1     knitr_1.22       
 
 loaded via a namespace (and not attached):
- [1] nlme_3.1-137                bitops_1.0-6               
- [3] matrixStats_0.54.0          ggtree_1.12.7              
- [5] bit64_0.9-7                 RColorBrewer_1.1-2         
- [7] progress_1.2.0              httr_1.3.1                 
- [9] rprojroot_1.3-2             GenomeInfoDb_1.16.0        
-[11] tools_3.5.2                 backports_1.1.2            
-[13] R6_2.3.0                    DBI_1.0.0                  
-[15] lazyeval_0.2.1              BiocGenerics_0.26.0        
-[17] colorspace_1.3-2            withr_2.1.2                
-[19] gridExtra_2.3               tidyselect_0.2.5           
-[21] prettyunits_1.0.2           bit_1.1-14                 
-[23] compiler_3.5.2              git2r_0.23.0               
-[25] Biobase_2.40.0              DelayedArray_0.6.5         
-[27] rtracklayer_1.40.4          labeling_0.3               
-[29] scales_1.0.0                stringr_1.3.1              
-[31] digest_0.6.18               Rsamtools_1.32.2           
-[33] rmarkdown_1.10              R.utils_2.7.0              
-[35] XVector_0.20.0              pkgconfig_2.0.2            
-[37] htmltools_0.3.6             BSgenome_1.48.0            
-[39] rlang_0.3.1                 RSQLite_2.1.1              
-[41] bindr_0.1.1                 jsonlite_1.6               
-[43] BiocParallel_1.14.2         dplyr_0.7.8                
-[45] R.oo_1.22.0                 VariantAnnotation_1.26.1   
-[47] RCurl_1.95-4.11             GenomeInfoDbData_1.1.0     
-[49] Matrix_1.2-15               Rcpp_1.0.0                 
-[51] munsell_0.5.0               S4Vectors_0.18.3           
-[53] ape_5.1                     R.methodsS3_1.7.1          
-[55] stringi_1.2.4               whisker_0.3-2              
-[57] yaml_2.2.0                  SummarizedExperiment_1.10.1
-[59] zlibbioc_1.26.0             plyr_1.8.4                 
-[61] grid_3.5.2                  blob_1.1.1                 
-[63] parallel_3.5.2              snpStats_1.30.0            
-[65] crayon_1.3.4                lattice_0.20-38            
-[67] Biostrings_2.48.0           cowplot_0.9.4              
-[69] splines_3.5.2               GenomicFeatures_1.32.2     
-[71] hms_0.4.2                   pillar_1.3.1               
-[73] GenomicRanges_1.32.7        biomaRt_2.36.1             
-[75] stats4_3.5.2                XML_3.98-1.15              
-[77] glue_1.3.0                  evaluate_0.11              
-[79] treeio_1.4.3                gtable_0.2.0               
-[81] purrr_0.2.5                 tidyr_0.8.2                
-[83] assertthat_0.2.0            tidytree_0.1.9             
-[85] survival_2.43-3             tibble_2.0.1               
-[87] pheatmap_1.0.12             rvcheck_0.1.0              
-[89] GenomicAlignments_1.16.0    AnnotationDbi_1.42.1       
-[91] memoise_1.1.0               IRanges_2.14.12            
-[93] workflowr_1.1.1             bindrcpp_0.2.2             </code></pre>
+ [1] nlme_3.1-140                bitops_1.0-6               
+ [3] matrixStats_0.54.0          fs_1.3.0                   
+ [5] ggtree_1.14.6               bit64_0.9-7                
+ [7] RColorBrewer_1.1-2          progress_1.2.0             
+ [9] httr_1.4.0                  rprojroot_1.3-2            
+[11] GenomeInfoDb_1.18.2         tools_3.6.1                
+[13] backports_1.1.4             R6_2.4.0                   
+[15] DBI_1.0.0                   lazyeval_0.2.2             
+[17] BiocGenerics_0.28.0         colorspace_1.4-1           
+[19] withr_2.1.2                 gridExtra_2.3              
+[21] tidyselect_0.2.5            prettyunits_1.0.2          
+[23] bit_1.1-14                  compiler_3.6.1             
+[25] git2r_0.25.2                Biobase_2.42.0             
+[27] DelayedArray_0.8.0          rtracklayer_1.42.2         
+[29] labeling_0.3                scales_1.0.0               
+[31] stringr_1.4.0               digest_0.6.18              
+[33] Rsamtools_1.34.1            rmarkdown_1.12             
+[35] XVector_0.22.0              pkgconfig_2.0.2            
+[37] htmltools_0.3.6             BSgenome_1.50.0            
+[39] highr_0.8                   rlang_0.3.4                
+[41] RSQLite_2.1.1               VGAM_1.1-1                 
+[43] jsonlite_1.6                BiocParallel_1.16.6        
+[45] dplyr_0.8.0.1               VariantAnnotation_1.28.13  
+[47] RCurl_1.95-4.12             GenomeInfoDbData_1.2.0     
+[49] Matrix_1.2-17               Rcpp_1.0.1                 
+[51] munsell_0.5.0               S4Vectors_0.20.1           
+[53] ape_5.3                     stringi_1.4.3              
+[55] yaml_2.2.0                  SummarizedExperiment_1.12.0
+[57] zlibbioc_1.28.0             plyr_1.8.4                 
+[59] grid_3.6.1                  blob_1.1.1                 
+[61] parallel_3.6.1              snpStats_1.32.0            
+[63] crayon_1.3.4                lattice_0.20-38            
+[65] Biostrings_2.50.2           cowplot_0.9.4              
+[67] splines_3.6.1               GenomicFeatures_1.34.8     
+[69] hms_0.4.2                   pillar_1.3.1               
+[71] GenomicRanges_1.34.0        biomaRt_2.38.0             
+[73] stats4_3.6.1                XML_3.98-1.19              
+[75] glue_1.3.1                  evaluate_0.13              
+[77] treeio_1.6.2                gtable_0.3.0               
+[79] purrr_0.3.2                 tidyr_0.8.3                
+[81] assertthat_0.2.1            xfun_0.6                   
+[83] tidytree_0.2.4              survival_2.44-1.1          
+[85] tibble_2.1.1                pheatmap_1.0.12            
+[87] rvcheck_0.1.3               GenomicAlignments_1.18.1   
+[89] AnnotationDbi_1.44.0        memoise_1.1.0              
+[91] IRanges_2.16.0              workflowr_1.4.0            </code></pre>
 </div>
 </div>
+</div>
+
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
 TeX fonts only; see
@@ -613,14 +832,6 @@ footer is added to webpages before the MathJax javascript. -->
     "HTML-CSS": { availableFonts: ["TeX"] }
   });
 </script>
-
-<hr>
-<p>
-  This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
-  analysis was created with
-  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
-</p>
-<hr>
 
 
 
