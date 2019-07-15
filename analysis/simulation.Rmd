@@ -100,7 +100,7 @@ row.names(GT_use) <- paste0("SNP", seq_len(nrow(GT_use)))
 
 # generate simulated reads
 dat_sim <- donor_read_simulator(GT_use, D_input, n_cell = n_cells,
-                                gene_ASE = gene_ASE, 
+                                #gene_ASE = gene_ASE, 
                                 donor_size = donor_fractions,
                                 doublet_rate = doublet_rate)
 

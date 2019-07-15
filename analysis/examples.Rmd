@@ -113,14 +113,14 @@ and donor data before sent to `vireo`, which can be achieved as follows.
 ```{r load GT data}
 donor_GT <- load_GT_vcf(system.file("extdata", "donors.donorid.vcf.gz", 
                                     package = "cardelino"))
-row.names(donor_GT) <- paste0("chr", row.names(donor_GT)) #not always necessary
-head(donor_GT)
+row.names(donor_GT$GT) <- paste0("chr", row.names(donor_GT$GT)) #not always necessary
+head(donor_GT$GT)
 
 cell_data_mm <- list()
-mm <- match(row.names(cell_data$D), row.names(donor_GT))
+mm <- match(row.names(cell_data$D), row.names(donor_GT$GT))
 cell_data_mm$D <- cell_data$D[!is.na(mm), ]
 cell_data_mm$A <- cell_data$A[!is.na(mm), ]
-Geno_data <- donor_GT[mm[!is.na(mm)], ]
+Geno_data <- donor_GT$GT[mm[!is.na(mm)], ]
 t(dim(cell_data_mm$D))
 ```
 

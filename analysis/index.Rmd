@@ -6,6 +6,16 @@ output:
     toc: false
 ---
 
+
+**Note**: This manual and vireo in R has been archived, as 
+Vireo is now re-implemented in Python, which is more memory 
+efficient and easier to run via a command line. We may turn off Vireo in R 
+in future but mainly maintain the Python, so please consider switch:
+https://vireoSNP.readthedocs.io
+
+===============
+
+
 Welcome to the documentation of `Vireo` for demultiplexing of pooled scRNA-seq 
 data without or with (part) reference. `Vireo` is part of 
 [cardelino](https://github.com/PMBio/cardelino) R package. 
